@@ -5,12 +5,13 @@ import requests
 import config
 
 import xml.etree.ElementTree
-import xml.etree as etree
+import xml.dom.minidom
 
 BASE_URL = 'http://www.zillow.com/webservice'
 
 GET_SEARCH_RESULTS = BASE_URL + '/GetSearchResults.htm'
 GET_ESTIMATE = BASE_URL + '/GetZestimate.htm'
+GET_PROPERTY_DETAILS = BASE_URL + '/GetUpdatedPropertyDetails.htm'
 
 def get_top_match(addr, zipc):
     r = requests.get(GET_SEARCH_RESULTS, params={
@@ -36,7 +37,19 @@ def get_estimate(zpid):
 
     print r.content
     e = xml.etree.ElementTree.fromstring(r.content)
-    xml.etree.ElementTree.tostring(e.text)
+
+    xml2 = xml.dom.minidom.parseString(r.content)
+    pretty_xml_as_string = xml2.toprettyxml()
+    print pretty_xml_as_string
+
+def get_property_details(zpid):
+    r = requests.get(GET_PROPERTY_DETAILS, params={
+        'zws-id': config.ZWSID,
+        'zpid': zpid
+    })
+    # TODO: Handle failure case
+
+    print r.content
 
 if __name__ == '__main__':
     ADDRESS = sys.argv[1]
@@ -46,3 +59,4 @@ if __name__ == '__main__':
     zpid = get_top_match(ADDRESS, ZIPCODE)
     print 'Received ZPID', zpid
     get_estimate(zpid)
+    get_property_details(zpid)
