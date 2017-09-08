@@ -82,6 +82,10 @@ def get_deep_comps(zpid):
 
     print pretty_print_xml(r.content)
 
+# TODO: Possibly use headless code
+# HOA (Zillow has this but seems it's random)
+# Taxes (Some counties have this public)
+
 if __name__ == '__main__':
     ADDRESS = sys.argv[1]
     ZIPCODE = sys.argv[2]
