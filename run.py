@@ -5,6 +5,10 @@ import requests
 import config
 import re
 
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+
 import xml.etree.ElementTree
 import xml.dom.minidom
 
@@ -82,9 +86,23 @@ def get_deep_comps(zpid):
 
     print pretty_print_xml(r.content)
 
-# TODO: Possibly use headless code
-# HOA (Zillow has this but seems it's random)
-# Taxes (Some counties have this public)
+# Use headless to try to get HOA and Taxes
+def get_hoa_and_taxes(zpid):
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+
+    driver = webdriver.Chrome(chrome_options=chrome_options)
+
+    # TODO: Figure out the captcha piece here
+    url = 'https://www.zillow.com/homedetails/test/' + str(zpid) + '_zpid/'
+    driver.get(url)
+    print driver.page_source
+
+    hoa, tax = None, None
+
+    return hoa, tax
+
 
 if __name__ == '__main__':
     ADDRESS = sys.argv[1]
@@ -96,3 +114,4 @@ if __name__ == '__main__':
     get_estimate(zpid)
     get_property_details(zpid)
     get_deep_comps(zpid)
+    get_hoa_and_taxes(zpid)
