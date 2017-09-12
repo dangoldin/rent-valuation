@@ -89,8 +89,10 @@ def get_deep_comps(zpid):
 # Use headless to try to get HOA and Taxes
 def get_hoa_and_taxes(zpid):
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
     chrome_options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+    # chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3212.0 Safari/537.36")
 
     driver = webdriver.Chrome(chrome_options=chrome_options)
 
@@ -98,11 +100,8 @@ def get_hoa_and_taxes(zpid):
     url = 'https://www.zillow.com/homedetails/test/' + str(zpid) + '_zpid/'
     driver.get(url)
     print driver.page_source
-
     hoa, tax = None, None
-
     return hoa, tax
-
 
 if __name__ == '__main__':
     ADDRESS = sys.argv[1]
